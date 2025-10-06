@@ -1,4 +1,6 @@
 name: Ping site and update data
+permissions:
+  contents: write
 on:
   push:
   schedule:
