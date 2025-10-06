@@ -13,5 +13,10 @@
     "timestamp": 1759762839,
     "status_code": 403,
     "response_time": 0.087
+  },
+  {
+    "timestamp": 1759763075,
+    "status_code": 403,
+    "response_time": 0.144
   }
 ]
