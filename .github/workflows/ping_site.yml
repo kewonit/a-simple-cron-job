@@ -1,5 +1,6 @@
 name: Ping site and update data
 on:
+  push:
   schedule:
     - cron: "0 0 * * *" # Every 24 hours
 
@@ -20,8 +21,6 @@ jobs:
         run: pip install -r requirements.txt
       - name: Ping site
         run: python scripts/ping_site.py
-        env:
-          PING_URL: ${{ secrets.PING_URL }}
       - name: Commit data
         run: |
           git config user.name "github-actions[bot]"

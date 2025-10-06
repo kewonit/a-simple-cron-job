@@ -13,6 +13,35 @@
 </head>
 <body>
   <h1>Ping Results</h1>
-  <div hx-get="data/site_data.html" hx-trigger="load, every 1m" hx-swap="innerHTML"></div>
+  <!-- You can replace the JSON URL below with your own GitHub raw URL -->
+  <!-- You can replace the JSON URL below with your own GitHub raw URL -->
+  <div id="results"
+       hx-get="https://raw.githubusercontent.com/kewonit/a-simple-cron-job/refs/heads/main/data/site_data.json"
+       hx-trigger="load, every 1m"
+       hx-swap="none">
+    <!-- JSON will be rendered here -->
+  </div>
+  <!-- Example of using HTMX extension to render JSON data into HTML -->
+  <script>
+    document.body.addEventListener('htmx:afterOnLoad', function(evt) {
+      if (evt.detail.target.id === 'results') {
+        const raw = evt.detail.xhr.response;
+        let data;
+        try {
+          data = JSON.parse(raw);
+        } catch (e) {
+          console.error('Failed to parse JSON', e);
+          return;
+        }
+        let html = '<table border="1" cellpadding="5" cellspacing="0"><tr><th>Timestamp</th><th>Status Code</th><th>Response Time (s)</th></tr>';
+        data.forEach(entry => {
+          const dt = entry.timestamp ? new Date(entry.timestamp * 1000).toISOString() : '';
+          html += `<tr><td>${dt}</td><td>${entry.status_code || ''}</td><td>${entry.response_time || ''}</td></tr>`;
+        });
+        html += '</table>';
+        document.getElementById('results').innerHTML = html;
+      }
+    });
+  </script>
 </body>
 </html>
