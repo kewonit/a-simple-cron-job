@@ -6,42 +6,56 @@
   <script src="https://unpkg.com/htmx.org@1.8.6"></script>
   <title>Ping Results</title>
   <style>
+    /* Table styles */
     table { border-collapse: collapse; width: 100%; }
     th, td { border: 1px solid #ddd; padding: 8px; }
     th { background-color: #f4f4f4; }
+
+    /* Layout styles */
+    body { display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 0; font-family: sans-serif; background-color: #fafafa; }
+    main { flex: 1; width: 100%; max-width: 42rem; padding: 1rem; }
+    h1 { text-align: center; margin-bottom: 1rem; }
+    footer { text-align: center; padding: 1rem 0; }
   </style>
 </head>
 <body>
-  <h1>Ping Results</h1>
-  <!-- You can replace the JSON URL below with your own GitHub raw URL -->
-  <!-- You can replace the JSON URL below with your own GitHub raw URL -->
-  <div id="results"
-       hx-get="/data/site_data.json"
-       hx-trigger="load, every 1m"
-       hx-swap="none">
-    <!-- JSON will be rendered here -->
-  </div>
-  <!-- Example of using HTMX extension to render JSON data into HTML -->
-  <script>
-    document.body.addEventListener('htmx:afterOnLoad', function(evt) {
-      if (evt.detail.target.id === 'results') {
-        const raw = evt.detail.xhr.response;
-        let data;
-        try {
-          data = JSON.parse(raw);
-        } catch (e) {
-          console.error('Failed to parse JSON', e);
-          return;
+  <main>
+    <h1>Ping Results</h1>
+    <!-- You can replace the JSON URL below with your own GitHub raw URL -->
+    <div id="results"
+         hx-get="/data/site_data.json"
+         hx-trigger="load, every 1m"
+         hx-swap="none">
+      <!-- JSON will be rendered here -->
+    </div>
+    <!-- Example of using HTMX extension to render JSON data into HTML -->
+    <script>
+      document.body.addEventListener('htmx:afterOnLoad', function(evt) {
+        if (evt.detail.target.id === 'results') {
+          const raw = evt.detail.xhr.response;
+          let data;
+          try {
+            data = JSON.parse(raw);
+          } catch (e) {
+            console.error('Failed to parse JSON', e);
+            return;
+          }
+          let html = '<table border="1" cellpadding="5" cellspacing="0"><tr><th>Timestamp</th><th>Status Code</th><th>Response Time (s)</th></tr>';
+          data.forEach(entry => {
+            const dt = entry.timestamp ? new Date(entry.timestamp * 1000).toISOString() : '';
+            html += `<tr><td>${dt}</td><td>${entry.status_code || ''}</td><td>${entry.response_time || ''}</td></tr>`;
+          });
+          html += '</table>';
+          document.getElementById('results').innerHTML = html;
         }
-        let html = '<table border="1" cellpadding="5" cellspacing="0"><tr><th>Timestamp</th><th>Status Code</th><th>Response Time (s)</th></tr>';
-        data.forEach(entry => {
-          const dt = entry.timestamp ? new Date(entry.timestamp * 1000).toISOString() : '';
-          html += `<tr><td>${dt}</td><td>${entry.status_code || ''}</td><td>${entry.response_time || ''}</td></tr>`;
-        });
-        html += '</table>';
-        document.getElementById('results').innerHTML = html;
-      }
-    });
-  </script>
+      });
+    </script>
+    <div style="text-align: center; margin-top: 1rem;">
+      <img src="https://cyber.dabamos.de/88x31/ie_only.gif" alt="badge">
+    </div>
+  </main>
+  <footer>
+    <!-- footer badge removed; moved below table -->
+  </footer>
 </body>
 </html>
