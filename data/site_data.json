@@ -53,5 +53,10 @@
     "timestamp": 1760317023,
     "status_code": 403,
     "response_time": 0.082
+  },
+  {
+    "timestamp": 1760403201,
+    "status_code": 403,
+    "response_time": 0.107
   }
 ]
